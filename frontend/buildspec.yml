@@ -1,0 +1,41 @@
+version: 0.2
+
+env:
+  variables:
+    VITE_API_URL: "/api"
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 20
+    commands:
+      - echo "Installing frontend dependencies"
+      - cd frontend
+      - npm install
+
+  pre_build:
+    commands:
+      - echo "Creating .env file"
+      - echo "VITE_API_URL=$VITE_API_URL" > .env
+
+  build:
+    commands:
+      - echo "Building React app"
+      - npm run build
+      - cd ..
+
+post_build:
+  commands:
+    - echo "Build completed"
+
+artifacts:
+  files:
+    - appspec.yml
+    - scripts/**/*
+    - frontend/dist/**/*
+  discard-paths: no
+
+cache:
+  paths:
+    - frontend/node_modules/**/*
+
